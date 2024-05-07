@@ -2,8 +2,9 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/": "pages/index.js",
-  "/search": "pages/search.js",
+  "/api/person": "pages/api/person.js",
   "/api/person/people": "pages/api/person/people.js",
-  "/api/person": "pages/api/person.js"
+  "/": "pages/index.html",
+  "/search": "pages/search.html",
+  "/404": "pages/404.html"
 }

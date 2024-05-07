@@ -1,30 +1,11 @@
-import { Button, Heading, Text } from "@pegasus-ui/react";
+import { Heading, Text } from "@pegasus-ui/react";
 import { NextSeo } from "next-seo";
-
-import previewImage from "../../assets/app-preview.jpg";
-import Image from "next/image";
-import {
-  Container,
-  Hero,
-  List,
-  Preview,
-  ListContainer,
-  InputContainer,
-  Input,
-} from "./styles";
-import { useRouter } from "next/router";
+import { List, ListContainer, InputContainer, Input } from "./styles";
 import { api } from "@/lib/axios";
 import { useQuery } from "@tanstack/react-query";
-import { Suspense, useState } from "react";
+import { useState } from "react";
 
-export default function Search({
-  searchParams,
-}: {
-  searchParams?: {
-    query?: string;
-    page?: string;
-  };
-}) {
+export default function Search() {
   const [people, setPeople] = useState<Person[]>([]);
   const [person, setPerson] = useState<Person>();
 
@@ -76,7 +57,7 @@ export default function Search({
         </Heading>
         <List>
           {allPeople &&
-            allPeople.map((person, index) => {
+            allPeople.map((person) => {
               return (
                 <Text key={person.name} size="xl">
                   {person.cpf} - {person.name} - {person.temporary_house}

@@ -15,9 +15,11 @@ datasource db {
 model Person {
   id              String   @id @default(uuid())
   name            String
-  cpf             String
+  cpf             String   @unique 
+  observations    String   @default("")
   temporary_house String  
   created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt @default(now())
 
   @@map("person")
 }

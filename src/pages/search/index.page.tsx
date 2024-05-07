@@ -3,19 +3,47 @@ import { NextSeo } from "next-seo";
 
 import previewImage from "../../assets/app-preview.jpg";
 import Image from "next/image";
-import { Container, Hero, List, Preview, ListContainer } from "./styles";
+import {
+  Container,
+  Hero,
+  List,
+  Preview,
+  ListContainer,
+  InputContainer,
+  Input,
+} from "./styles";
 import { useRouter } from "next/router";
 import { api } from "@/lib/axios";
 import { useQuery } from "@tanstack/react-query";
+import { Suspense, useState } from "react";
 
-export default function Search() {
-  const router = useRouter();
+export default function Search({
+  searchParams,
+}: {
+  searchParams?: {
+    query?: string;
+    page?: string;
+  };
+}) {
+  const [people, setPeople] = useState<Person[]>([]);
+  const [person, setPerson] = useState<Person>();
 
-  const { data: people } = useQuery<Person[]>([], async () => {
+  const { data: allPeople } = useQuery<Person[]>([], async () => {
     const response = await api.get(`/person/people`);
 
+    setPeople(response.data);
     return response.data;
   });
+
+  function findPerson(typedValue: string) {
+    const foundPerson = people.find((person) =>
+      person.name.toLowerCase().includes(typedValue.toLowerCase())
+    );
+
+    console.log(foundPerson, "founded person");
+
+    setPerson(foundPerson);
+  }
 
   return (
     <>
@@ -27,12 +55,28 @@ export default function Search() {
 
       <ListContainer>
         <Heading as="h2" size="3xl">
-          Todas as pessoas
+          Busque por alguém
         </Heading>
-
+        <InputContainer>
+          <Input
+            type="text"
+            onChange={(event) => findPerson(event.target.value)}
+          />
+        </InputContainer>
         <List>
-          {people &&
-            people.map((person, index) => {
+          {person && (
+            <Text key={person.name} size="xl">
+              {person.cpf} - {person.name} - {person.temporary_house}
+            </Text>
+          )}
+        </List>
+
+        <Heading as="h2" size="3xl">
+          Todas as pessoas cadastradas
+        </Heading>
+        <List>
+          {allPeople &&
+            allPeople.map((person, index) => {
               return (
                 <Text key={person.name} size="xl">
                   {person.cpf} - {person.name} - {person.temporary_house}

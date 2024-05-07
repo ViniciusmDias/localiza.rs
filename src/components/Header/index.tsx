@@ -1,21 +1,15 @@
-import { HeaderContainer, LinkTo } from './styles'
-import logoImg from '../../assets/app-preview.jpg'
-import Image from 'next/image'
-import { Heading } from '@pegasus-ui/react'
+import { HeaderContainer, LinkTo } from "./styles";
+import { Heading } from "@pegasus-ui/react";
 
 export function Header() {
   return (
     <HeaderContainer>
-      <Image src={logoImg} alt="" width={56} height={56} />
       <LinkTo href="/">
-        <Heading as="h3">Home</Heading>
+        <Heading as="h3">Cadastrar alguém</Heading>
       </LinkTo>
-      <LinkTo href="/register">
-        <Heading as="h3">Cadastrar jogador</Heading>
-      </LinkTo>
-      <LinkTo href="/online-stage">
-        <Heading as="h3">Etapa atual</Heading>
+      <LinkTo href="/search">
+        <Heading as="h3">Localizar alguém</Heading>
       </LinkTo>
     </HeaderContainer>
-  )
+  );
 }

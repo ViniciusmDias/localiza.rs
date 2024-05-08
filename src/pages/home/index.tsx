@@ -8,22 +8,24 @@ import { useRouter } from "next/router";
 import { api } from "../../lib/axios";
 import { AxiosError } from "axios";
 import { NextSeo } from "next-seo";
+import { useState } from "react";
 
 const registerFormSchema = z.object({
   name: z
     .string()
     .min(3, { message: "O nome precisa ter pelo menos 3 letras." }),
-  cpf: z
-    .string()
-    .min(3, { message: "O lado precisa ter pelo menos 3 letras." }),
-  temporary_house: z
-    .string()
-    .min(3, { message: "O lado precisa ter pelo menos 3 letras." }),
+  cpf: z.string(),
+  temporary_house: z.string().min(3, {
+    message: "O abrigo temporário precisa ter pelo menos 3 letras.",
+  }),
+  observations: z.string(),
 });
 
 type RegisterFormData = z.infer<typeof registerFormSchema>;
 
 export default function Home() {
+  const [cpfExists, setCpfExists] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -31,6 +33,19 @@ export default function Home() {
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerFormSchema),
   });
+
+  async function findPerson(typedCpf: string) {
+    try {
+      const response = await api.get(`/person/${typedCpf}`);
+      const foundPerson = response.data;
+
+      if (foundPerson) {
+        setCpfExists(true);
+      }
+    } catch (error) {
+      setCpfExists(false);
+    }
+  }
 
   const router = useRouter();
 
@@ -57,7 +72,7 @@ export default function Home() {
       <NextSeo title="Cadastre uma pessoa | Localiza.rs" />
       <Container>
         <Header>
-          <Heading as="strong">Localiza.rs!</Heading>
+          <Heading as="strong">Localiza.rs</Heading>
           <Text>
             Uma corrente de solidariedade para localizar pessoas prejudicadas
             pelas enchentes no Rio Grande do Sul.
@@ -73,9 +88,16 @@ export default function Home() {
           </label>
           <label>
             <Text size="sm">CPF (Não Obrigatório)</Text>
-            <TextInput placeholder="CPF" {...register("cpf")} />
-            {errors.name && (
-              <FormError size="sm">{errors.name.message}</FormError>
+            <TextInput
+              placeholder="CPF"
+              {...register("cpf")}
+              onChange={(event) => findPerson(event.target.value)}
+            />
+            {cpfExists && (
+              <FormError size="sm">
+                CPF já cadastrado na nossa base, busque por esse CPF para
+                encontrar a pessoa.
+              </FormError>
             )}
           </label>
           <label>
@@ -84,9 +106,16 @@ export default function Home() {
               placeholder="Nome do abrigo"
               {...register("temporary_house")}
             />
-            {errors.name && (
-              <FormError size="sm">{errors.name.message}</FormError>
+            {errors.temporary_house && (
+              <FormError size="sm">{errors.temporary_house.message}</FormError>
             )}
+          </label>
+          <label>
+            <Text size="sm">Observações</Text>
+            <TextInput
+              placeholder="Observações"
+              {...register("observations")}
+            />
           </label>
           <Button type="submit" disabled={isSubmitting}>
             Cadastrar <ArrowRight />

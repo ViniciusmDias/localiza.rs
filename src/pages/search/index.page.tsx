@@ -21,8 +21,6 @@ export default function Search() {
       person.name.toLowerCase().includes(typedValue.toLowerCase())
     );
 
-    console.log(foundPerson, "founded person");
-
     setPerson(foundPerson);
   }
 

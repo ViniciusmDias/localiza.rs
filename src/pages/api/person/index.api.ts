@@ -9,13 +9,14 @@ export default async function handler(
     return res.status(405).end();
   }
 
-  const { name, cpf, temporary_house } = req.body;
+  const { name, cpf, temporary_house, observations } = req.body;
 
   const person = await prisma.person.create({
     data: {
       name,
       cpf,
       temporary_house,
+      observations,
     },
   });
 

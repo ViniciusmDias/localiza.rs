@@ -1,27 +1,43 @@
-import { Heading, Text } from "@pegasus-ui/react";
+import { Heading, Text, TextInput } from "@pegasus-ui/react";
 import { NextSeo } from "next-seo";
-import { List, ListContainer, InputContainer, Input } from "./styles";
+import {
+  List,
+  ListContainer,
+  InputContainer,
+  Input,
+  LastPeopleContainer,
+} from "./styles";
 import { api } from "@/lib/axios";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { Form } from "react-hook-form";
 
 export default function Search() {
-  const [people, setPeople] = useState<Person[]>([]);
-  const [person, setPerson] = useState<Person>();
+  const [lastPeople, setLastPeople] = useState<Person[]>([]);
+  const [people, setPeople] = useState<Person[]>();
 
   const { data: allPeople } = useQuery<Person[]>([], async () => {
     const response = await api.get(`/person/people`);
 
-    setPeople(response.data);
+    setLastPeople(response.data);
     return response.data;
   });
 
-  function findPerson(typedValue: string) {
-    const foundPerson = people.find((person) =>
-      person.name.toLowerCase().includes(typedValue.toLowerCase())
-    );
+  async function findPerson(searchValue: string) {
+    try {
+      console.log(searchValue, "searchValue");
+      if (searchValue === "") {
+        setPeople([]);
+        return;
+      }
 
-    setPerson(foundPerson);
+      const response = await api.get(`/person/${searchValue}`);
+      const foundPeople: Person[] = response.data;
+
+      setPeople(foundPeople);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
@@ -33,36 +49,50 @@ export default function Search() {
       />
 
       <ListContainer>
-        <Heading as="h2" size="3xl">
-          Busque por alguém
+        <Heading as="h1" size="md">
+          Busque por um abrigado
         </Heading>
+        <Text>
+          Pesquisa de pessoas resgatadas nas enchentes do Rio Grande do Sul que
+          estão em abrigos.
+        </Text>
         <InputContainer>
-          <Input
-            type="text"
-            onChange={(event) => findPerson(event.target.value)}
-          />
-        </InputContainer>
-        <List>
-          {person && (
-            <Text key={person.name} size="xl">
-              {person.cpf} - {person.name} - {person.temporary_house}
-            </Text>
-          )}
-        </List>
+          <label>
+            <Text size="sm">Digite o nome, CPF ou abrigo</Text>
+            <TextInput
+              placeholder="Busca por nome, cpf ou nome do abrigo"
+              onChange={(event) => findPerson(event.target.value)}
+            />
+          </label>
 
-        <Heading as="h2" size="3xl">
-          Todas as pessoas cadastradas
-        </Heading>
-        <List>
-          {allPeople &&
-            allPeople.map((person) => {
-              return (
-                <Text key={person.name} size="xl">
-                  {person.cpf} - {person.name} - {person.temporary_house}
-                </Text>
-              );
-            })}
-        </List>
+          <List>
+            {people &&
+              people.map((person) => {
+                return (
+                  <Text key={person.name} size="xl">
+                    {person.cpf} - {person.name} - {person.temporary_house}
+                  </Text>
+                );
+              })}
+          </List>
+        </InputContainer>
+
+        <LastPeopleContainer>
+          <Heading as="h2" size="md">
+            Últimos abrigados
+          </Heading>
+          <List>
+            {lastPeople &&
+              lastPeople.map((person) => {
+                return (
+                  <Text key={person.name} size="xl">
+                    {person.name} - {person.temporary_house} -
+                    {person.observations}
+                  </Text>
+                );
+              })}
+          </List>
+        </LastPeopleContainer>
       </ListContainer>
     </>
   );

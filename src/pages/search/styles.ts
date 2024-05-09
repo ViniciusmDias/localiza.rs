@@ -1,4 +1,4 @@
-import { Heading, styled } from "@pegasus-ui/react";
+import { Box, Heading, styled } from "@pegasus-ui/react";
 
 export const Container = styled("div", {
   maxWidth: "calc(100vw - (100vw - 1160px) / 2)",
@@ -9,7 +9,7 @@ export const Container = styled("div", {
 });
 
 export const ListContainer = styled("div", {
-  maxWidth: "100vw",
+  maxWidth: "650px",
   display: "flex",
   flexDirection: `column`,
   justifyContent: "space-around",
@@ -18,25 +18,43 @@ export const ListContainer = styled("div", {
 
   [`${Heading}`]: {
     width: "100%",
-    textAlign: "center",
-    marginBottom: "$5",
+    marginBottom: "$2",
   },
 });
 
-export const InputContainer = styled("div", {
+export const Form = styled(Box, {
+  marginTop: "$6",
   display: "flex",
   flexDirection: "column",
-  alignItems: "center",
+  gap: "$4",
+});
+
+export const InputContainer = styled("div", {
+  maxWidth: "650px",
+  display: "flex",
+  flexDirection: `column`,
+  justifyContent: "space-around",
+  margin: "$4 0",
+  flexWrap: "wrap",
+  borderRadius: "$xs",
+  backgroundColor: "$gray800",
+  border: "1px solid $gray",
+  padding: "$4",
 });
 
 export const Input = styled("input", {
   width: "$40",
   padding: "$2",
-  margin: "$4",
+});
+
+export const LastPeopleContainer = styled("div", {
+  display: "flex",
+  flexDirection: "column",
+  marginTop: "$10",
 });
 
 export const List = styled("div", {
   display: "flex",
   flexDirection: "column",
-  alignItems: "center",
+  marginTop: "$2",
 });

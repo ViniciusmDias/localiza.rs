@@ -25,6 +25,7 @@ type RegisterFormData = z.infer<typeof registerFormSchema>;
 
 export default function Home() {
   const [cpfExists, setCpfExists] = useState(false);
+  const [toast, setToast] = useState(false);
 
   const {
     register,
@@ -36,7 +37,7 @@ export default function Home() {
 
   async function findPerson(typedCpf: string) {
     try {
-      const response = await api.get(`/person/${typedCpf}`);
+      const response = await api.get(`/person/cpf/${typedCpf}`);
       const foundPerson = response.data;
 
       if (foundPerson) {
@@ -55,9 +56,15 @@ export default function Home() {
         name: data.name,
         cpf: data.cpf,
         temporary_house: data.temporary_house,
+        observations: data.observations,
       });
 
       await router.push("/");
+      setToast(true);
+
+      setTimeout(() => {
+        setToast(false);
+      }, 3000);
     } catch (err) {
       if (err instanceof AxiosError && err?.response?.data?.message) {
         alert(err.response.data.message);
@@ -118,7 +125,10 @@ export default function Home() {
             />
           </label>
           <Button type="submit" disabled={isSubmitting}>
-            Cadastrar <ArrowRight />
+            {!toast && "Cadastrar"}
+            {!toast && <ArrowRight />}
+
+            {toast && "Registrado com sucesso!"}
           </Button>
         </Form>
       </Container>

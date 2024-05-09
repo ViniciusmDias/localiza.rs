@@ -25,7 +25,6 @@ export default function Search() {
 
   async function findPerson(searchValue: string) {
     try {
-      console.log(searchValue, "searchValue");
       if (searchValue === "") {
         setPeople([]);
         return;
@@ -52,7 +51,7 @@ export default function Search() {
         <Heading as="h1" size="md">
           Busque por um abrigado
         </Heading>
-        <Text>
+        <Text size="sm">
           Pesquisa de pessoas resgatadas nas enchentes do Rio Grande do Sul que
           estão em abrigos.
         </Text>
@@ -69,8 +68,9 @@ export default function Search() {
             {people &&
               people.map((person) => {
                 return (
-                  <Text key={person.name} size="xl">
-                    {person.cpf} - {person.name} - {person.temporary_house}
+                  <Text key={person.cpf} size="xl">
+                    {person.name} - {person.temporary_house} -{" "}
+                    {person.observations}{" "}
                   </Text>
                 );
               })}
@@ -81,12 +81,13 @@ export default function Search() {
           <Heading as="h2" size="md">
             Últimos abrigados
           </Heading>
+          <Text size="sm">Lista com os 10 últimos abrigados cadastrados.</Text>
           <List>
             {lastPeople &&
               lastPeople.map((person) => {
                 return (
-                  <Text key={person.name} size="xl">
-                    {person.name} - {person.temporary_house} -
+                  <Text key={person.cpf} size="xl">
+                    {person.name} - {person.temporary_house} -{" "}
                     {person.observations}
                   </Text>
                 );

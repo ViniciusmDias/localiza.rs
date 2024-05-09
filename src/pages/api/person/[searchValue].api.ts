@@ -36,7 +36,6 @@ export default async function handler(
         ],
       },
     });
-    console.log(people, "people");
 
     if (!people) {
       return res
@@ -46,7 +45,6 @@ export default async function handler(
 
     return res.json(people);
   } catch (error) {
-    console.log("cai aqui");
     console.error("Error fetching person by CPF:", error);
     return res.status(500).json({ message: "Internal Server Error" });
   }

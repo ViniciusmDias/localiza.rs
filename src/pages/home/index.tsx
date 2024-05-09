@@ -70,7 +70,7 @@ export default function Home() {
         alert(err.response.data.message);
         return;
       }
-      console.log(err);
+      console.error(err);
     }
   }
 

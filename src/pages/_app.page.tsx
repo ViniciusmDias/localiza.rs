@@ -4,6 +4,7 @@ import { DefaultSeo } from "next-seo";
 import { queryClient } from "@/lib/react-query";
 import type { AppProps } from "next/app";
 import { Header } from "@/components/Header";
+import { Analytics } from "@vercel/analytics/react";
 
 globalStyles();
 
@@ -20,6 +21,7 @@ export default function App({ Component, pageProps }: AppProps) {
       />
       <Header />
       <Component {...pageProps} />
+      <Analytics />
     </QueryClientProvider>
   );
 }
